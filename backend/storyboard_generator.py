@@ -1,6 +1,6 @@
 """
 Storyboard generation pipeline using Google Gemini interleaved text+image output.
-Falls back to mock data when GEMINI_API_KEY is not set or the API call fails.
+Falls back to mock data when GOOGLE_API_KEY is not set or the API call fails.
 """
 
 import base64
@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
 
-MOCK_MODE = not bool(os.getenv("GEMINI_API_KEY"))
+MOCK_MODE = not bool(os.getenv("GOOGLE_API_KEY"))
 
 SYSTEM_PROMPT = """You are a creative director and storyboard artist. Convert the given text into a compelling video storyboard.
 
@@ -179,14 +179,14 @@ async def generate_storyboard(input_text: str) -> list[dict]:
     raw_scenes: list[RawScene] = []
 
     if MOCK_MODE:
-        logger.info("GEMINI_API_KEY not set — using mock storyboard generator")
+        logger.info("GOOGLE_API_KEY not set — using mock storyboard generator")
         raw_scenes = _generate_mock_scenes(input_text)
     else:
         try:
             from google import genai
             from google.genai import types
 
-            client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+            client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
             prompt = f"""{SYSTEM_PROMPT}
 
@@ -194,7 +194,7 @@ Text to convert:
 {input_text}"""
 
             response = client.models.generate_content(
-                model="gemini-2.5-flash-preview-05-20",
+                model="gemini-2.5-flash-image",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_modalities=["TEXT", "IMAGE"],
