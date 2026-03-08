@@ -201,7 +201,14 @@ Text to convert:
                 ),
             )
 
-            raw_scenes = _parse_scenes_from_parts(response.parts)
+            # Parts live at response.candidates[0].content.parts
+            parts = response.candidates[0].content.parts if (
+                response.candidates
+                and response.candidates[0].content
+                and response.candidates[0].content.parts
+            ) else []
+
+            raw_scenes = _parse_scenes_from_parts(parts)
 
             if not raw_scenes:
                 logger.warning("Gemini returned no parseable scenes — falling back to mock")
