@@ -1,0 +1,25 @@
+Content marketers spend four or more hours turning each blog post into a social video. They write scripts, hunt for stock photos, design in Canva, and time everything manually. That's fifteen to twenty hours per week for a team publishing three to five videos.
+
+Meet Reelcraft. Paste any article and get a complete video storyboard with AI-generated illustrations in seconds.
+
+Reelcraft uses Gemini's interleaved text and image output. Instead of generating text and images separately, Gemini 2.5 Flash produces alternating scene scripts and matching illustrations in a single API call. This means every illustration is contextually coherent with its scene.
+
+Let me show you. I paste a blog post into Reelcraft and click Generate.
+
+Gemini processes the text and generates a complete storyboard. Each scene has a narration script, timing estimate, and a custom AI-generated illustration. Not stock photos. Every image is unique, generated specifically for this content.
+
+The interactive timeline shows scene durations proportionally. You can click on any scene to see its details: the narration script, the generated illustration, and the timing.
+
+You can download individual scene images or export the entire storyboard as a PDF to share with your video editing team.
+
+The history page shows all your previous storyboards with thumbnails and metadata.
+
+Here's how it works under the hood. The Next.js frontend sends the article text to a FastAPI backend on Cloud Run. The backend calls Gemini 2.5 Flash with response modalities set to both TEXT and IMAGE. Gemini returns interleaved parts: alternating text blocks and inline PNG image data. We parse these parts, matching each illustration to its scene.
+
+The backend runs on Google Cloud Run with one gigabyte of memory for image generation. Secret Manager stores the API key. Infrastructure as Code handles the full deployment with a single script.
+
+What makes Reelcraft special is the interleaved output. Because Gemini generates the script and illustrations together, maintaining context across the entire storyboard, you get visual consistency that you simply cannot get by generating text and images separately.
+
+Four hours of work, collapsed into thirty seconds.
+
+Built for the Gemini Live Agent Challenge.
