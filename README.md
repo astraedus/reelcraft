@@ -7,10 +7,27 @@ Powered by Google Gemini's interleaved text+image generation.
 ## Architecture
 
 ```
-reelcraft/
-  backend/       FastAPI Python server
-  frontend/      Next.js 14 App Router
+                    ┌─────────────────────────────────────────────┐
+                    │              Google Cloud                    │
+                    │                                             │
+┌──────────┐       │  ┌──────────────┐    ┌───────────────────┐  │
+│  Browser  │       │  │  Cloud Run   │    │  Gemini 2.5 Flash │  │
+│           │──────►│  │  (FastAPI)   │───►│  Interleaved      │  │
+│ Next.js   │       │  │              │    │  Text + Image     │  │
+│ Paste     │       │  │  POST        │◄───│  Output           │  │
+│ Article   │       │  │  /api/gen    │    │                   │  │
+│           │◄──────│  │              │    │  response_mods:   │  │
+│ View      │       │  │  SQLite DB   │    │  [TEXT, IMAGE]    │  │
+│ Storyboard│       │  │              │    └───────────────────┘  │
+└──────────┘       │  └──────────────┘                           │
+                   │                                             │
+                   │  ┌──────────────┐                           │
+                   │  │ Secret Mgr   │  API Key Storage          │
+                   │  └──────────────┘                           │
+                   └─────────────────────────────────────────────┘
 ```
+
+**Pipeline**: Paste article -> Gemini generates interleaved text scenes + illustrations -> Parse alternating parts -> Storyboard with scripts, images, and timing
 
 ## Quick Start
 
@@ -60,15 +77,34 @@ Returns `{ "storyboard_id": "uuid", "message": "..." }`
 
 ## Gemini Integration
 
-The storyboard generator uses `gemini-2.5-flash-preview-05-20` with `response_modalities=['TEXT', 'IMAGE']` to generate interleaved scene scripts and illustrations in a single API call.
+The storyboard generator uses `gemini-2.5-flash-image` with `response_modalities=['TEXT', 'IMAGE']` to generate interleaved scene scripts and illustrations in a single API call.
 
 The response parts are parsed as alternating text blocks (scene script + timing) and inline image data (PNG illustrations).
+
+## Cloud Deployment (IaC)
+
+```bash
+export GOOGLE_API_KEY="your-key"
+export GOOGLE_CLOUD_PROJECT="your-project-id"
+./deploy.sh
+```
+
+Automates: GCP API enablement, Secret Manager, Cloud Build, Cloud Run deploy, Vercel frontend deploy.
+
+## Google Cloud Services Used
+
+| Service | Purpose |
+|---------|---------|
+| Cloud Run | Backend hosting (auto-scaling, serverless) |
+| Cloud Build | Container image building |
+| Secret Manager | API key storage |
+| Generative Language API | Gemini interleaved text+image generation |
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `GEMINI_API_KEY` | — | Google AI Studio API key |
+| `GOOGLE_API_KEY` | -- | Google AI Studio API key |
 | `DB_PATH` | `./reelcraft.db` | SQLite database path |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | Backend URL for Next.js rewrites |
 
