@@ -17,26 +17,7 @@ Powered by Google Gemini's interleaved text+image generation.
 
 ## Architecture
 
-```
-                    ┌─────────────────────────────────────────────┐
-                    │              Google Cloud                    │
-                    │                                             │
-┌──────────┐       │  ┌──────────────┐    ┌───────────────────┐  │
-│  Browser  │       │  │  Cloud Run   │    │  Gemini 2.5 Flash │  │
-│           │──────►│  │  (FastAPI)   │───►│  Interleaved      │  │
-│ Next.js   │       │  │              │    │  Text + Image     │  │
-│ Paste     │       │  │  POST        │◄───│  Output           │  │
-│ Article   │       │  │  /api/gen    │    │                   │  │
-│           │◄──────│  │              │    │  response_mods:   │  │
-│ View      │       │  │  SQLite DB   │    │  [TEXT, IMAGE]    │  │
-│ Storyboard│       │  │              │    └───────────────────┘  │
-└──────────┘       │  └──────────────┘                           │
-                   │                                             │
-                   │  ┌──────────────┐                           │
-                   │  │ Secret Mgr   │  API Key Storage          │
-                   │  └──────────────┘                           │
-                   └─────────────────────────────────────────────┘
-```
+![Architecture](docs/architecture.png)
 
 **Pipeline**: Paste article -> Gemini generates interleaved text scenes + illustrations -> Parse alternating parts -> Storyboard with scripts, images, and timing
 
