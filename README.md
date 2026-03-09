@@ -4,6 +4,17 @@ Transform any blog post or article into a cinematic video storyboard with AI-gen
 
 Powered by Google Gemini's interleaved text+image generation.
 
+## Live Demo & Links
+
+| | |
+|---|---|
+| **Live App** | [reelcraft-delta.vercel.app](https://reelcraft-delta.vercel.app) |
+| **Backend API** | [reelcraft-api-93135657352.us-central1.run.app](https://reelcraft-api-93135657352.us-central1.run.app) |
+| **Demo Video** | [youtu.be/OgZwbyq-U_Y](https://youtu.be/OgZwbyq-U_Y) |
+| **Blog Post** | [Building Reelcraft: AI-Powered Blog-to-Video Storyboards with Gemini Interleaved Output](https://dev.to/diven_rastdus_c5af27d68f3/building-reelcraft-ai-powered-blog-to-video-storyboards-with-gemini-interleaved-output-19lf) |
+| **DevPost** | [devpost.com/software/formpilot-ai-powered-form-navigator](https://devpost.com/software/formpilot-ai-powered-form-navigator) |
+| **Hackathon** | Gemini Live Agent Challenge 2026 — Creative Storyteller track |
+
 ## Architecture
 
 ```
