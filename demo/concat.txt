@@ -1,0 +1,15 @@
+file '/home/astraedus/projects/reelcraft/demo/00_title.png'
+duration 21.857142857142858
+file '/home/astraedus/projects/reelcraft/demo/01_home.png'
+duration 21.857142857142858
+file '/home/astraedus/projects/reelcraft/demo/02_text_entered.png'
+duration 21.857142857142858
+file '/home/astraedus/projects/reelcraft/demo/03_generating.png'
+duration 21.857142857142858
+file '/home/astraedus/projects/reelcraft/demo/04_storyboard.png'
+duration 21.857142857142858
+file '/home/astraedus/projects/reelcraft/demo/99_architecture_clean.png'
+duration 21.857142857142858
+file '/home/astraedus/projects/reelcraft/demo/98_closing.png'
+duration 21.857142857142858
+file '/home/astraedus/projects/reelcraft/demo/98_closing.png'

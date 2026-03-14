@@ -1,66 +1,65 @@
-# DevPost Submission — Reelcraft
+# DevPost Submission -- Reelcraft
 
 ## Project Name
-Reelcraft — Blog-to-Video Storyboard Generator
+Reelcraft -- Blog-to-Video Storyboard Generator
 
 ## Category
 Best Creative Storyteller
 
 ## Tagline
-Transform any blog post into a cinematic video storyboard with AI-generated illustrations in seconds
+Paste any article, get a complete video storyboard with AI-generated illustrations in seconds -- powered by Gemini's interleaved text+image output
 
 ## Description
 
 ### Inspiration
-Content marketers spend 4+ hours turning each blog post into a social video: writing scripts, hunting stock photos, designing in Canva, timing everything. That's 15-20 hours per week for a team publishing 3-5 videos. We wanted to collapse that into a single paste-and-generate workflow.
+Content marketers spend 4+ hours turning each blog post into a social video: writing scripts, hunting stock photos, designing in Canva, timing everything. That's 15-20 hours per week for a team publishing 3-5 videos. We wanted to collapse that entire workflow into a single paste-and-generate step.
 
 ### What it does
 Paste any article or blog post, and Reelcraft generates a complete video storyboard:
 
-- **Scene-by-scene narration scripts** with duration estimates
-- **AI-generated illustrations** per scene (custom visuals, not stock photos)
+- **Scene-by-scene narration scripts** with duration estimates for each scene
+- **AI-generated illustrations** per scene -- custom visuals, not stock photos
 - **Interactive timeline** with proportional scene durations
 - **Image gallery** with individual scene image downloads
 - **PDF export** for sharing with video editors
-- **Storyboard history** with SQLite persistence
+- **Storyboard history** with persistence across sessions
 
 ### How we built it
-The key technical innovation is Gemini's **interleaved text+image output**. Instead of generating text and images in separate API calls, we use `gemini-2.5-flash-image` with `response_modalities=['TEXT', 'IMAGE']` to produce alternating text and image blocks in a single response:
+The key innovation is Gemini's **interleaved text+image output**. Instead of generating text and images in separate API calls, we use `gemini-2.5-flash-image` with `response_modalities=['TEXT', 'IMAGE']` to produce alternating scene scripts and matching illustrations in a single API call:
 
 ```
-Response Part 1: Text  → Scene 1 script + timing
-Response Part 2: Image → Scene 1 illustration (PNG)
-Response Part 3: Text  → Scene 2 script + timing
-Response Part 4: Image → Scene 2 illustration (PNG)
-...
+Response Part 1: Text  -> Scene 1 script + timing
+Response Part 2: Image -> Scene 1 illustration (PNG)
+Response Part 3: Text  -> Scene 2 script + timing
+Response Part 4: Image -> Scene 2 illustration (PNG)
 ```
 
-This means each illustration is contextually coherent with its scene script — Gemini generates them together, maintaining visual and narrative consistency across the entire storyboard.
+This means each illustration is contextually coherent with its scene script -- Gemini generates them together, maintaining visual and narrative consistency across the entire storyboard.
 
-**Backend**: Python FastAPI on Cloud Run. The storyboard generator parses `response.candidates[0].content.parts`, separating text parts (scene metadata) from image parts (inline PNG data).
+**Backend**: Python FastAPI on Cloud Run. The storyboard generator parses `response.candidates[0].content.parts`, separating text parts (scene metadata in SCENE/SCRIPT/TIMING format) from inline image parts (PNG data). Scenes are stored in SQLite with base64-encoded images.
 
-**Frontend**: Next.js with an interactive timeline component, scene cards with illustrations, and PDF export.
+**Frontend**: Next.js with an interactive timeline component showing proportional scene durations, scene cards with illustrations, and PDF/image export.
 
 ### Challenges we ran into
-- The Gemini SDK response structure for interleaved output uses `response.candidates[0].content.parts`, not `response.parts` — discovering this required careful debugging
+- Discovering the correct response structure for interleaved output (`response.candidates[0].content.parts`, not `response.parts`)
 - Parsing alternating text/image parts requires robust state tracking to match illustrations to their scenes
-- Image generation produces ~2MB PNGs per scene, requiring careful memory management
+- Image generation produces ~2MB PNGs per scene, requiring careful memory management on Cloud Run
 
 ### Accomplishments that we're proud of
-- A single API call generates both the narrative script AND matching illustrations
-- The visual consistency across scenes is remarkable — characters, settings, and style remain coherent
-- The interactive timeline makes it easy to visualize the final video flow
+- A single API call generates both the narrative script AND matching illustrations -- no separate image generation step
+- Visual consistency across scenes is remarkable -- characters, settings, and style remain coherent because Gemini generates them together
+- The interactive timeline makes it easy to visualize the final video flow before editing
 
 ### What we learned
-- Gemini's interleaved output is genuinely useful for creative workflows where text and visuals need to be co-generated
+- Gemini's interleaved output is genuinely powerful for creative workflows where text and visuals need to be co-generated
 - Setting `temperature=1.0` produces more varied and interesting illustrations
-- The interleaved approach eliminates the "stock photo" problem — every image is custom-generated for its scene
+- The interleaved approach eliminates the "stock photo" problem -- every image is custom-generated for its specific scene context
 
 ### What's next for Reelcraft
-- Audio narration generation per scene
-- Music suggestion engine
-- Direct export to video editing tools (Premiere, DaVinci)
-- Collaborative editing with multiple storyboard versions
+- Audio narration generation per scene (edge-tts integration)
+- Background music suggestion engine
+- Direct export to video editing tools (Premiere, DaVinci Resolve)
+- Collaborative editing with version control for storyboards
 
 ## Built With
 - Google Gemini 2.5 Flash (gemini-2.5-flash-image) with interleaved TEXT+IMAGE output
@@ -72,11 +71,11 @@ This means each illustration is contextually coherent with its scene script — 
 - Google Cloud Build
 - Google Secret Manager
 - SQLite + aiosqlite
-- Pillow (mock mode image generation)
 - Python 3.12
 
 ## Try it out
 - GitHub: https://github.com/astraedus/reelcraft
-- Live Demo: https://reelcraft-api-93135657352.us-central1.run.app
+- Live App: https://reelcraft-delta.vercel.app
+- API: https://reelcraft-api-93135657352.us-central1.run.app
 
 #GeminiLiveAgentChallenge
