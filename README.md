@@ -19,6 +19,16 @@ Powered by Google Gemini's interleaved text+image generation.
 
 ![Architecture](docs/architecture.png)
 
+```mermaid
+graph LR
+    A[Next.js Frontend<br/>URL input + Gallery] -->|Blog URL| B[Cloud Run API<br/>FastAPI]
+    B -->|Fetch + Parse| C[Blog Content<br/>Extraction]
+    C -->|Article text| B
+    B -->|Interleaved prompt:<br/>text + image generation| D[Gemini 2.5 Flash<br/>Multimodal Output]
+    D -->|Scene descriptions +<br/>Generated images| B
+    B -->|Storyboard panels:<br/>narration + visuals| A
+```
+
 **Pipeline**: Paste article -> Gemini generates interleaved text scenes + illustrations -> Parse alternating parts -> Storyboard with scripts, images, and timing
 
 ## Quick Start
